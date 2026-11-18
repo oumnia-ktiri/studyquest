@@ -52,11 +52,17 @@ export default function Dashboard() {
     setMessage("");
     try {
       const r = await api(`/sessions/${active!.id}/complete`, { method: "POST" });
-      setMessage(`+${r.xpEarned} XP!${r.leveledUp ? " Level up!" : ""}`);
+      setMessage(`+${r.xpEarned} XP (streak bonus +${r.streakBonus})!${r.leveledUp ? " Level up!" : ""}`);
       await load();
     } catch (e) { setMessage((e as Error).message); }
   }
-
+    async function cancel() {
+    setMessage("");
+    try {
+      await api(`/sessions/${active!.id}/cancel`, { method: "POST" });
+      await load();
+    } catch (e) { setMessage((e as Error).message); }
+  }
   function logout() {
     localStorage.removeItem("token");
     navigate("/login");
@@ -98,6 +104,9 @@ export default function Dashboard() {
               className="w-full rounded-lg bg-emerald-600 py-3 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-40"
             >
               Complete quest
+            </button>
+                        <button onClick={cancel} className="w-full text-sm text-slate-500 hover:underline dark:text-slate-400">
+              Cancel quest
             </button>
           </div>
         ) : (

@@ -40,24 +40,38 @@ router.post("/:id/complete", async (req: AuthedRequest, res) => {
     return res.status(400).json({ error: "Quest not finished yet", elapsedMinutes: Math.floor(elapsedMinutes) });
   }
 
-  const xpEarned = xpForMinutes(session.plannedMinutes);
   const user = await prisma.user.findUnique({ where: { id: req.userId } });
+
+  // Streak: consecutive days with at least one completed quest (UTC days)
+  const now = new Date();
+  const today = Math.floor(now.getTime() / 86400000);
+  let newStreak = 1;
+  if (user!.lastStudyDate) {
+    const last = Math.floor(user!.lastStudyDate.getTime() / 86400000);
+    if (last === today) newStreak = Math.max(1, user!.streak);
+    else if (last === today - 1) newStreak = user!.streak + 1;
+  }
+
+  const streakBonus = Math.min(newStreak, 7) * 2;
+  const xpEarned = xpForMinutes(session.plannedMinutes) + streakBonus;
   const newXp = user!.xp + xpEarned;
   const newLevel = levelFromXp(newXp);
 
   const [updatedSession, updatedUser] = await prisma.$transaction([
     prisma.studySession.update({
       where: { id: session.id },
-      data: { completedAt: new Date(), xpEarned },
+      data: { completedAt: now, xpEarned },
     }),
     prisma.user.update({
       where: { id: req.userId },
-      data: { xp: newXp, level: newLevel },
+      data: { xp: newXp, level: newLevel, streak: newStreak, lastStudyDate: now },
     }),
   ]);
 
   res.json({
     xpEarned,
+    streakBonus,
+    streak: updatedUser.streak,
     xp: updatedUser.xp,
     level: updatedUser.level,
     leveledUp: newLevel > user!.level,
@@ -65,6 +79,16 @@ router.post("/:id/complete", async (req: AuthedRequest, res) => {
   });
 });
 
+router.post("/:id/cancel", async (req: AuthedRequest, res) => {
+  const session = await prisma.studySession.findFirst({
+    where: { id: Number(req.params.id), userId: req.userId },
+  });
+  if (!session) return res.status(404).json({ error: "Session not found" });
+  if (session.completedAt) return res.status(409).json({ error: "Already completed" });
+
+  await prisma.studySession.delete({ where: { id: session.id } });
+  res.json({ cancelled: true });
+});
 router.get("/", async (req: AuthedRequest, res) => {
   const sessions = await prisma.studySession.findMany({
     where: { userId: req.userId },
