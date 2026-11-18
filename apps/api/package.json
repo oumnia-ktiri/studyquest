@@ -8,20 +8,22 @@
   },
   "license": "ISC",
   "dependencies": {
-    "express": "*",
+    "@prisma/client": "^6.19.3",
+    "bcryptjs": "*",
     "cors": "*",
     "dotenv": "*",
-    "zod": "*",
-    "bcryptjs": "*",
+    "express": "*",
     "jsonwebtoken": "*",
-    "socket.io": "*"
+    "prisma": "^6.19.3",
+    "socket.io": "*",
+    "zod": "*"
   },
   "devDependencies": {
-    "typescript": "*",
-    "tsx": "*",
-    "@types/node": "*",
-    "@types/express": "*",
     "@types/cors": "*",
-    "@types/jsonwebtoken": "*"
+    "@types/express": "*",
+    "@types/jsonwebtoken": "*",
+    "@types/node": "*",
+    "tsx": "*",
+    "typescript": "*"
   }
 }
