@@ -1,0 +1,27 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "StudyQuest backend",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "tsx watch src/index.ts"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "express": "*",
+    "cors": "*",
+    "dotenv": "*",
+    "zod": "*",
+    "bcryptjs": "*",
+    "jsonwebtoken": "*",
+    "socket.io": "*"
+  },
+  "devDependencies": {
+    "typescript": "*",
+    "tsx": "*",
+    "@types/node": "*",
+    "@types/express": "*",
+    "@types/cors": "*",
+    "@types/jsonwebtoken": "*"
+  }
+}
