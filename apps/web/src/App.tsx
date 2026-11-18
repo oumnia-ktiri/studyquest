@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./Login";
 import Dashboard from "./Dashboard";
+import ThemeToggle from "./ThemeToggle";
 
 function RequireAuth({ children }: { children: React.ReactElement }) {
   const loggedIn = !!localStorage.getItem("token");
@@ -10,6 +11,7 @@ function RequireAuth({ children }: { children: React.ReactElement }) {
 export default function App() {
   return (
     <BrowserRouter>
+      <ThemeToggle />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route
