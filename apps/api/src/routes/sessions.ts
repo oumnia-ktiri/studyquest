@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "../db";
 import { requireAuth, AuthedRequest } from "../middleware/auth";
 import { xpForMinutes, levelFromXp } from "../xp";
+import { awardBadges } from "../badges";
 
 const router = Router();
 router.use(requireAuth);

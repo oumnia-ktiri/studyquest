@@ -5,14 +5,17 @@ import authRoutes from "./routes/auth";
 import { requireAuth, AuthedRequest } from "./middleware/auth";
 import { prisma } from "./db";
 import sessionRoutes from "./routes/sessions";
+import badgeRoutes from "./routes/badges";
+import statsRoutes from "./routes/stats";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
 app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
 app.use("/api/auth", authRoutes);
 app.use("/api/sessions", sessionRoutes);
+app.use("/api/badges", badgeRoutes);
+app.use("/api/stats", statsRoutes);
 
 app.get("/api/me", requireAuth, async (req: AuthedRequest, res) => {
   const user = await prisma.user.findUnique({ where: { id: req.userId } });

@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "./api";
+import Charts from "./Charts";
 
 type Me = { email: string; xp: number; level: number; streak: number };
 type Session = { id: number; subject: string; plannedMinutes: number; startedAt: string; completedAt: string | null };
+type Badge = { code: string; name: string; description: string; earnedAt: string | null };
 
 const xpForLevel = (level: number) => Math.round(100 * Math.pow(level - 1, 1.5));
 
@@ -14,11 +16,13 @@ export default function Dashboard() {
   const [minutes, setMinutes] = useState(25);
   const [secondsLeft, setSecondsLeft] = useState(0);
   const [message, setMessage] = useState("");
+  const [badges, setBadges] = useState<Badge[]>([]);
   const navigate = useNavigate();
 
   async function load() {
     try {
       setMe(await api("/me"));
+      setBadges(await api("/badges"));
       const sessions: Session[] = await api("/sessions");
       setActive(sessions.find((s) => !s.completedAt) || null);
     } catch {
@@ -52,17 +56,22 @@ export default function Dashboard() {
     setMessage("");
     try {
       const r = await api(`/sessions/${active!.id}/complete`, { method: "POST" });
-      setMessage(`+${r.xpEarned} XP (streak bonus +${r.streakBonus})!${r.leveledUp ? " Level up!" : ""}`);
+      const badgeText = r.newBadges?.length
+        ? ` New badge: ${r.newBadges.map((b: { name: string }) => b.name).join(", ")}!`
+        : "";
+      setMessage(`+${r.xpEarned} XP (streak bonus +${r.streakBonus})!${r.leveledUp ? " Level up!" : ""}${badgeText}`);
       await load();
     } catch (e) { setMessage((e as Error).message); }
   }
-    async function cancel() {
+
+  async function cancel() {
     setMessage("");
     try {
       await api(`/sessions/${active!.id}/cancel`, { method: "POST" });
       await load();
     } catch (e) { setMessage((e as Error).message); }
   }
+
   function logout() {
     localStorage.removeItem("token");
     navigate("/login");
@@ -105,7 +114,7 @@ export default function Dashboard() {
             >
               Complete quest
             </button>
-                        <button onClick={cancel} className="w-full text-sm text-slate-500 hover:underline dark:text-slate-400">
+            <button onClick={cancel} className="w-full text-sm text-slate-500 hover:underline dark:text-slate-400">
               Cancel quest
             </button>
           </div>
@@ -120,6 +129,27 @@ export default function Dashboard() {
           </div>
         )}
         {message && <p className="mt-4 text-center font-medium text-amber-600 dark:text-amber-400">{message}</p>}
+      </div>
+
+      <Charts refreshKey={me.xp} />
+
+      <div className={card}>
+        <h2 className="mb-3 text-xl font-semibold">Badges</h2>
+        <div className="grid grid-cols-2 gap-3">
+          {badges.map((b) => (
+            <div
+              key={b.code}
+              className={`rounded-lg border p-3 text-sm ${
+                b.earnedAt
+                  ? "border-amber-400 bg-amber-50 text-slate-900 dark:bg-amber-900/30 dark:text-amber-100"
+                  : "border-slate-300 opacity-40 dark:border-slate-600"
+              }`}
+            >
+              <p className="font-semibold">{b.earnedAt ? "🏆 " : "🔒 "}{b.name}</p>
+              <p>{b.description}</p>
+            </div>
+          ))}
+        </div>
       </div>
 
       <button onClick={logout} className="w-full text-sm text-slate-500 hover:underline dark:text-slate-400">
