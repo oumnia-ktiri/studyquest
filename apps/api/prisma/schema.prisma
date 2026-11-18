@@ -15,4 +15,15 @@ model User {
   level        Int      @default(1)
   streak       Int      @default(0)
   createdAt    DateTime @default(now())
+  sessions     StudySession[]
+}
+model StudySession {
+  id              Int       @id @default(autoincrement())
+  userId          Int
+  user            User      @relation(fields: [userId], references: [id])
+  subject         String
+  plannedMinutes  Int
+  startedAt       DateTime  @default(now())
+  completedAt     DateTime?
+  xpEarned        Int       @default(0)
 }

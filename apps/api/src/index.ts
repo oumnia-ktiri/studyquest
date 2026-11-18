@@ -4,6 +4,7 @@ import cors from "cors";
 import authRoutes from "./routes/auth";
 import { requireAuth, AuthedRequest } from "./middleware/auth";
 import { prisma } from "./db";
+import sessionRoutes from "./routes/sessions";
 
 const app = express();
 app.use(cors());
@@ -11,6 +12,7 @@ app.use(express.json());
 
 app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
 app.use("/api/auth", authRoutes);
+app.use("/api/sessions", sessionRoutes);
 
 app.get("/api/me", requireAuth, async (req: AuthedRequest, res) => {
   const user = await prisma.user.findUnique({ where: { id: req.userId } });

@@ -1,0 +1,11 @@
+-- CreateTable
+CREATE TABLE "StudySession" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "userId" INTEGER NOT NULL,
+    "subject" TEXT NOT NULL,
+    "plannedMinutes" INTEGER NOT NULL,
+    "startedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "completedAt" DATETIME,
+    "xpEarned" INTEGER NOT NULL DEFAULT 0,
+    CONSTRAINT "StudySession_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
