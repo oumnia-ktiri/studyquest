@@ -8,23 +8,47 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  email        String   @unique
-  passwordHash String
-  xp           Int      @default(0)
-  level        Int      @default(1)
-  streak       Int      @default(0)
-  createdAt    DateTime @default(now())
-  sessions     StudySession[]
+  id            Int            @id @default(autoincrement())
+  email         String         @unique
+  passwordHash  String
+  xp            Int            @default(0)
+  level         Int            @default(1)
+  streak        Int            @default(0)
   lastStudyDate DateTime?
+  createdAt     DateTime       @default(now())
+  sessions      StudySession[]
+  badges        UserBadge[]
+  flashcards    Flashcard[]
 }
+
 model StudySession {
-  id              Int       @id @default(autoincrement())
-  userId          Int
-  user            User      @relation(fields: [userId], references: [id])
-  subject         String
-  plannedMinutes  Int
-  startedAt       DateTime  @default(now())
-  completedAt     DateTime?
-  xpEarned        Int       @default(0)
+  id             Int       @id @default(autoincrement())
+  userId         Int
+  user           User      @relation(fields: [userId], references: [id])
+  subject        String
+  plannedMinutes Int
+  startedAt      DateTime  @default(now())
+  completedAt    DateTime?
+  xpEarned       Int       @default(0)
+}
+
+model UserBadge {
+  id       Int      @id @default(autoincrement())
+  userId   Int
+  user     User     @relation(fields: [userId], references: [id])
+  code     String
+  earnedAt DateTime @default(now())
+
+  @@unique([userId, code])
+}
+
+model Flashcard {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  question  String
+  answer    String
+  known     Int      @default(0)
+  missed    Int      @default(0)
+  createdAt DateTime @default(now())
 }

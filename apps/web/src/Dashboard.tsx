@@ -25,9 +25,14 @@ export default function Dashboard() {
       setBadges(await api("/badges"));
       const sessions: Session[] = await api("/sessions");
       setActive(sessions.find((s) => !s.completedAt) || null);
-    } catch {
-      localStorage.removeItem("token");
-      navigate("/login");
+    } catch (e) {
+      const msg = (e as Error).message;
+      if (msg.toLowerCase().includes("token")) {
+        localStorage.removeItem("token");
+        navigate("/login");
+      } else {
+        setMessage(`Server error: ${msg}`);
+      }
     }
   }
 
@@ -77,7 +82,7 @@ export default function Dashboard() {
     navigate("/login");
   }
 
-  if (!me) return <p className="p-8">Loading...</p>;
+  if (!me) return <p className="p-8">Loading... {message}</p>;
 
   const mm = String(Math.floor(secondsLeft / 60)).padStart(2, "0");
   const ss = String(secondsLeft % 60).padStart(2, "0");
@@ -151,23 +156,33 @@ export default function Dashboard() {
           ))}
         </div>
       </div>
+
       <Link
         to="/rooms"
         className="block w-full rounded-2xl bg-indigo-600 py-4 text-center font-semibold text-white shadow-lg hover:bg-indigo-700"
       >
         Join a study room
       </Link>
+
       <Link
         to="/quiz"
         className="block w-full rounded-2xl bg-emerald-600 py-4 text-center font-semibold text-white shadow-lg hover:bg-emerald-700"
       >
         Make an AI quiz from my notes
       </Link>
-            <Link
+
+      <Link
         to="/leaderboard"
         className="block w-full rounded-2xl bg-amber-500 py-4 text-center font-semibold text-white shadow-lg hover:bg-amber-600"
       >
         Weekly leaderboard
+      </Link>
+
+      <Link
+        to="/flashcards"
+        className="block w-full rounded-2xl bg-sky-600 py-4 text-center font-semibold text-white shadow-lg hover:bg-sky-700"
+      >
+        My flashcards
       </Link>
 
       <button onClick={logout} className="w-full text-sm text-slate-500 hover:underline dark:text-slate-400">

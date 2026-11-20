@@ -8,14 +8,14 @@ import { prisma } from "./db";
 import sessionRoutes from "./routes/sessions";
 import badgeRoutes from "./routes/badges";
 import statsRoutes from "./routes/stats";
-import { setupSockets } from "./sockets";
 import quizRoutes from "./routes/quiz";
 import leaderboardRoutes from "./routes/leaderboard";
+import flashcardRoutes from "./routes/flashcards";
+import { setupSockets } from "./sockets";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use("/api/leaderboard", leaderboardRoutes);
 
 app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
 app.use("/api/auth", authRoutes);
@@ -23,6 +23,8 @@ app.use("/api/sessions", sessionRoutes);
 app.use("/api/badges", badgeRoutes);
 app.use("/api/stats", statsRoutes);
 app.use("/api/quiz", quizRoutes);
+app.use("/api/leaderboard", leaderboardRoutes);
+app.use("/api/flashcards", flashcardRoutes);
 
 app.get("/api/me", requireAuth, async (req: AuthedRequest, res) => {
   const user = await prisma.user.findUnique({ where: { id: req.userId } });
