@@ -4,7 +4,8 @@
   "description": "StudyQuest backend",
   "main": "src/index.ts",
   "scripts": {
-    "dev": "tsx watch src/index.ts"
+    "dev": "tsx watch src/index.ts",
+    "test": "vitest run"
   },
   "license": "ISC",
   "dependencies": {
@@ -24,6 +25,7 @@
     "@types/jsonwebtoken": "*",
     "@types/node": "*",
     "tsx": "*",
-    "typescript": "*"
+    "typescript": "*",
+    "vitest": "^5.1.1"
   }
 }
