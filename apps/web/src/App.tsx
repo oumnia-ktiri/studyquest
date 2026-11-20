@@ -4,6 +4,7 @@ import Dashboard from "./Dashboard";
 import Rooms from "./Rooms";
 import ThemeToggle from "./ThemeToggle";
 import Quiz from "./Quiz";
+import Leaderboard from "./Leaderboard";
 
 function RequireAuth({ children }: { children: React.ReactElement }) {
   const loggedIn = !!localStorage.getItem("token");
@@ -19,6 +20,7 @@ export default function App() {
         <Route path="/" element={<RequireAuth><Dashboard /></RequireAuth>} />
         <Route path="/rooms" element={<RequireAuth><Rooms /></RequireAuth>} />
         <Route path="/quiz" element={<RequireAuth><Quiz /></RequireAuth>} />
+        <Route path="/leaderboard" element={<RequireAuth><Leaderboard /></RequireAuth>} />
       </Routes>
     </BrowserRouter>
   );

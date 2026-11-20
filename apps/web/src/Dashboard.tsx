@@ -163,6 +163,12 @@ export default function Dashboard() {
       >
         Make an AI quiz from my notes
       </Link>
+            <Link
+        to="/leaderboard"
+        className="block w-full rounded-2xl bg-amber-500 py-4 text-center font-semibold text-white shadow-lg hover:bg-amber-600"
+      >
+        Weekly leaderboard
+      </Link>
 
       <button onClick={logout} className="w-full text-sm text-slate-500 hover:underline dark:text-slate-400">
         Log out

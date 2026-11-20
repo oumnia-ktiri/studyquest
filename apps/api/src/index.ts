@@ -10,10 +10,12 @@ import badgeRoutes from "./routes/badges";
 import statsRoutes from "./routes/stats";
 import { setupSockets } from "./sockets";
 import quizRoutes from "./routes/quiz";
+import leaderboardRoutes from "./routes/leaderboard";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use("/api/leaderboard", leaderboardRoutes);
 
 app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
 app.use("/api/auth", authRoutes);
