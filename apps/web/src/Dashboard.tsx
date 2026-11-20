@@ -157,6 +157,12 @@ export default function Dashboard() {
       >
         Join a study room
       </Link>
+      <Link
+        to="/quiz"
+        className="block w-full rounded-2xl bg-emerald-600 py-4 text-center font-semibold text-white shadow-lg hover:bg-emerald-700"
+      >
+        Make an AI quiz from my notes
+      </Link>
 
       <button onClick={logout} className="w-full text-sm text-slate-500 hover:underline dark:text-slate-400">
         Log out

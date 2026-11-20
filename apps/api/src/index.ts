@@ -9,6 +9,7 @@ import sessionRoutes from "./routes/sessions";
 import badgeRoutes from "./routes/badges";
 import statsRoutes from "./routes/stats";
 import { setupSockets } from "./sockets";
+import quizRoutes from "./routes/quiz";
 
 const app = express();
 app.use(cors());
@@ -19,6 +20,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/sessions", sessionRoutes);
 app.use("/api/badges", badgeRoutes);
 app.use("/api/stats", statsRoutes);
+app.use("/api/quiz", quizRoutes);
 
 app.get("/api/me", requireAuth, async (req: AuthedRequest, res) => {
   const user = await prisma.user.findUnique({ where: { id: req.userId } });
