@@ -1,16 +1,19 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import http from "http";
 import authRoutes from "./routes/auth";
 import { requireAuth, AuthedRequest } from "./middleware/auth";
 import { prisma } from "./db";
 import sessionRoutes from "./routes/sessions";
 import badgeRoutes from "./routes/badges";
 import statsRoutes from "./routes/stats";
+import { setupSockets } from "./sockets";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
 app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
 app.use("/api/auth", authRoutes);
 app.use("/api/sessions", sessionRoutes);
@@ -24,4 +27,6 @@ app.get("/api/me", requireAuth, async (req: AuthedRequest, res) => {
 });
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`API running on http://localhost:${PORT}`));
+const server = http.createServer(app);
+setupSockets(server);
+server.listen(PORT, () => console.log(`API running on http://localhost:${PORT}`));

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { api } from "./api";
 import Charts from "./Charts";
 
@@ -151,6 +151,12 @@ export default function Dashboard() {
           ))}
         </div>
       </div>
+      <Link
+        to="/rooms"
+        className="block w-full rounded-2xl bg-indigo-600 py-4 text-center font-semibold text-white shadow-lg hover:bg-indigo-700"
+      >
+        Join a study room
+      </Link>
 
       <button onClick={logout} className="w-full text-sm text-slate-500 hover:underline dark:text-slate-400">
         Log out
