@@ -19,13 +19,16 @@ A gamified study platform. Focus on a subject with a timer, earn XP, level up, k
 
 ## Screenshots
 
-| Login | Study room |
-|---|---|
-| ![Login](docs/screenshots/login.png) | ![Rooms](docs/screenshots/rooms.png) |
+### Dashboard
+![Dashboard](docs/screenshots/dashboard.png)
 
-| Stats | Leaderboard |
+| Login | Stats |
 |---|---|
-| ![Stats](docs/screenshots/stats.png) | ![Leaderboard](docs/screenshots/leaderboard.png) |
+| ![Login](docs/screenshots/login.png) | ![Stats](docs/screenshots/stats.png) |
+
+| Study room | Leaderboard |
+|---|---|
+| ![Study room](docs/screenshots/studyroom.png) | ![Leaderboard](docs/screenshots/leaderboard.png) |
 
 | Flashcards | AI quiz |
 |---|---|
